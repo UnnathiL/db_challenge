@@ -1,8 +1,10 @@
 package com.db.awmd.challenge.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import java.util.concurrent.Semaphore;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
@@ -19,6 +21,9 @@ public class Account {
   @NotNull
   @Min(value = 0, message = "Initial balance must be positive.")
   private BigDecimal balance;
+
+  @JsonIgnore
+  private final Semaphore semaphore = new Semaphore(1); // binary semaphore
 
   public Account(String accountId) {
     this.accountId = accountId;

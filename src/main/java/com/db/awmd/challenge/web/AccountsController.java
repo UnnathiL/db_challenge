@@ -51,17 +51,19 @@ public class AccountsController {
     log.info("Retrieving account for id {}", accountId);
     return this.accountsService.getAccount(accountId);
   }
-  
+
   @PostMapping(path = "/transfer", consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> amountTransfer(@RequestBody @Valid AmountTransfer amountTransfer) {
-	  try {
-		  
-		this.accountsService.amountTransfer(amountTransfer.getAccountFrom(), amountTransfer.getAccountTo(), amountTransfer.getTransferAmount());
-		
-	} catch (AmountTransferException e) {
-		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-	}
-	  return new ResponseEntity<>("Transfer Completed",HttpStatus.ACCEPTED);
+    try {
+      log.info("Request received to transfer amount {}, from account: {}, to account: {}",
+              amountTransfer.getTransferAmount(), amountTransfer.getAccountFrom(), amountTransfer.getAccountTo());
+      this.accountsService.amountTransfer(amountTransfer.getAccountFrom(), amountTransfer.getAccountTo(),
+              amountTransfer.getTransferAmount());
+
+    } catch (AmountTransferException e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    return new ResponseEntity<>("Transfer Completed", HttpStatus.ACCEPTED);
   }
 
 }
